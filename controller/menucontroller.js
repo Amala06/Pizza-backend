@@ -111,11 +111,42 @@ const bestSeller=asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Could not fetch the data" });
   }
 });
-
 const filterItem = asyncHandler(async (req, res) => {
-    const item = req.body.category;
+  const item = req.params.name;
   try {
-    const MyData = await Menu.find({ category:item });
+    const regex = new RegExp(item);
+    const MyData = await Menu.find({ name: regex });
+
+    res.status(200).json(MyData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Could not fetch the data" });
+  }
+});
+
+
+const IdDisplay= asyncHandler(async (req, res) => {
+  // const item = req.params._id;
+  // console.log(item);
+  try {
+      const item = req.params._id;
+      console.log(item);
+    const MyData = await Menu.findOne({ _id:item });
+    // console.log(MyData); // add this line to log MyData to the console
+
+    res.status(200).json(MyData);
+  } catch (error) {
+    console.error(error); // add this line to log any errors to the console
+    res.status(500).json({ message: "Could not fetch the data" });
+  }
+}
+);
+const nameDisplay = asyncHandler(async (req, res) => {
+
+  try {
+      const name = req.params.name;
+      // console.log(item);
+    const MyData = await Menu.find({ name:name });
     // console.log(MyData); // add this line to log MyData to the console
 
     res.status(200).json(MyData);
@@ -126,11 +157,14 @@ const filterItem = asyncHandler(async (req, res) => {
 });
 
 
+
 module.exports = {
   menu,
   vegItem,
   NonvegItem,
   bestSeller,
   AllItem,
-  filterItem
+  filterItem,
+  IdDisplay,
+  nameDisplay,
 };
